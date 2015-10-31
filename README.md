@@ -1,4 +1,4 @@
-node-web-scraper
+urban-web-scraper
 ================
 
-Simple web scraper to get a movie name, release year and community rating from IMDB.
+Simple web scraper to return audio files from urban dictionary. Accepts a string paramter for urban dictionary word.
