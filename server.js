@@ -4,10 +4,13 @@ var request = require('request');
 var cheerio = require('cheerio');
 var app     = express();
 
-app.get('/', function(req, res){
-	// Let's scrape Anchorman 2
-	console.log(req);
-	var json;
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+app.get('/', function(req, res,next){
 	var query = req._parsedUrl.query;
 	url = 'http://www.urbandictionary.com/define.php?term='+query;
 
@@ -20,8 +23,7 @@ app.get('/', function(req, res){
 				json.title = $(this).text();
 		    })
 		    $('a.play-sound').filter(function(){
-		    	var audio = $(this)[0].attribs['data-urls'];
-		    	console.log(audio); 
+		    	var audio = $(this).data('urls');
 		        json.audio = audio;
 		    });
 		};
