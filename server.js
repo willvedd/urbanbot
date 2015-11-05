@@ -17,11 +17,14 @@ app.get('/', function(req, res,next){
 	request(url, function(error, response, html){
 		if(!error){
 			var $ = cheerio.load(html);
-			var json = { title : "", audio : "",query: query};
+			var json = { title : "", audio : "",query: query, definition:""};
 
 			$('a.word').filter(function(){
 				json.title = $(this).text();
-		    })
+		    });
+		    $('.meaning').first().filter(function(){
+				json.definition = $(this).text();
+		    });
 		    $('a.play-sound').filter(function(){
 		    	var audio = $(this).data('urls');
 		        json.audio = audio;
