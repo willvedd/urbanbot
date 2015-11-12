@@ -1,0 +1,7 @@
+partial {
+  value: whatever();
+}
+
+main {
+  value: whatever();
+}

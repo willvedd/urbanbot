@@ -4,13 +4,8 @@ var request = require('request');
 var cheerio = require('cheerio');
 var app     = express();
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
 
-app.get('/', function(req, res,next){
+app.get('/api', function(req, res,next){
 	var query = req._parsedUrl.query;
 	url = 'http://www.urbandictionary.com/define.php?term='+query;
 
@@ -32,7 +27,9 @@ app.get('/', function(req, res,next){
 		};
         res.send(JSON.stringify(json, null, 4))
 	})
-})
+});
+
+app.use(express.static('public'));
 
 app.listen('8081');
 exports = module.exports = app; 	
