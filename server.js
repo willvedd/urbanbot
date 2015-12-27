@@ -9,24 +9,26 @@ app.get('/api', function(req, res,next){
 	var query = req._parsedUrl.query;
 	url = 'http://www.urbandictionary.com/define.php?term='+query;
 
-	request(url, function(error, response, html){
-		if(!error){
-			var $ = cheerio.load(html);
-			var json = { title : "", audio : "",query: query, definition:""};
+	if(query != ''){
+		request(url, function(error, response, html){
+			if(!error){
+				var $ = cheerio.load(html);
+				var json = { title : "", audio : "",query: query, definition:""};
 
-			$('a.word').filter(function(){
-				json.title = $(this).text();
-		    });
-		    $('.meaning').first().filter(function(){
-				json.definition = $(this).text();
-		    });
-		    $('a.play-sound').filter(function(){
-		    	var audio = $(this).data('urls');
-		        json.audio = audio;
-		    });
-		};
-        res.send(JSON.stringify(json, null, 4))
-	})
+				$('a.word').filter(function(){
+					json.title = $(this).text();
+			    });
+			    $('.meaning').first().filter(function(){
+					json.definition = $(this).text();
+			    });
+			    $('a.play-sound').filter(function(){
+			    	var audio = $(this).data('urls');
+			        json.audio = audio;
+			    });
+			};
+	        res.send(JSON.stringify(json, null, 4))
+		})
+	}
 });
 
 app.use(express.static('public'));
