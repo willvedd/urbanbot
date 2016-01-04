@@ -4,10 +4,19 @@
 /********************
 ** Media Queries
 ********************/
+/********************
+** Colors
+********************/
+/********************
+** Colors
+********************/
+/********************
+** Style Declarations
+********************/
 html {
   height: 100%;
   width: 100%;
-  background-color: #D2F3EF;
+  background-color: #fdfdfd;
 }
 
 body {
@@ -23,34 +32,55 @@ input.search {
   font-size: 1.25rem;
   margin: 30px auto;
   display: block;
-  border: 4px solid #9AC3BE;
+  border: none;
+  border-bottom: 2px solid #00B4FF;
+  background-color: transparent;
+  font-family: "Lora", serif;
+  -webkit-transition: all 0.25s ease-in-out;
+  -moz-transition: all 0.25s ease-in-out;
+  -ms-transition: all 0.25s ease-in-out;
+  -o-transition: all 0.25s ease-in-out;
+  transition: all 0.25s ease-in-out;
 }
 @media only screen and (min-width: 768px) {
   input.search {
     padding: 20px;
-    border-width: 6px;
+    border-bottom-width: 2px;
     font-size: 40px;
     font-size: 2.5rem;
   }
 }
 @media only screen and (min-width: 1024px) {
   input.search {
-    border-width: 8px;
+    border-bottom-width: 2px;
     width: 100%;
     font-size: 60px;
     font-size: 3.75rem;
   }
 }
+input.search:focus {
+  outline: none;
+  border-bottom-width: 4px;
+  border-bottom-color: #2D2D48;
+}
+input.search.error {
+  color: #B00033;
+  border-bottom-color: #B00033;
+}
 
 p.definition {
-  font-family: "Helvetica Neue", sans-serif;
+  font-family: "Open Sans", sans-serif;
   font-style: italic;
   margin: 50px 20px;
   line-height: 22px;
   line-height: 1.375rem;
+  font-size: 20px;
+  font-size: 1.25rem;
 }
 
 .word {
+  font-family: "Lora", serif;
   font-style: normal;
   font-weight: bold;
+  color: #B00033;
 }

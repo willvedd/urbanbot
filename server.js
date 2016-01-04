@@ -13,10 +13,18 @@ app.get('/api', function(req, res,next){
 		request(url, function(error, response, html){
 			if(!error){
 				var $ = cheerio.load(html);
-				var json = { title : "", audio : "",query: query, definition:""};
+				var json = { 
+						title : "", 
+						audio : "",
+						query: query, 
+						definition:"",
+						results: false,
+					};
 
 				$('a.word').filter(function(){
+					console.log($(this).text());
 					json.title = $(this).text();
+					json.results = true;
 			    });
 			    $('.meaning').first().filter(function(){
 					json.definition = $(this).text();
@@ -25,8 +33,8 @@ app.get('/api', function(req, res,next){
 			    	var audio = $(this).data('urls');
 			        json.audio = audio;
 			    });
+	    		res.send(JSON.stringify(json, null, 4))
 			};
-	        res.send(JSON.stringify(json, null, 4))
 		})
 	}
 });

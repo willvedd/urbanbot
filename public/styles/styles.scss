@@ -6,6 +6,7 @@ $bp-small:				768;
 $bp-medium:				1024;
 $bp-large:				1200;  
 
+
 /********************
 ** Media Queries
 ********************/
@@ -90,10 +91,35 @@ $retina:				"only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen 
   transform:      $transform;
 }
 
+
+/********************
+** Colors
+********************/
+
+$f-serif:   'Lora', serif;
+$f-serif2:  'Merriweather', serif;
+$f-sans:    'Open Sans', sans-serif;
+
+/********************
+** Colors
+********************/
+
+$c-white:         #fdfdfd;
+$c-red:           #B00033;
+$c-blue--dark:    #2D2D48;
+$c-blue--light:   #00B4FF;
+$c-gray--light:   #EEEEEE;
+$c-gray--dark:    #515151;
+
+
+/********************
+** Style Declarations
+********************/
+
 html{
 	height: 100%;
 	width: 100%;
-	background-color: #D2F3EF;
+	background-color: $c-white;
 }
 body{
 	width: 90%;
@@ -106,28 +132,48 @@ input.search{
 	@include font-size(20);
 	margin: 30px auto;
 	display: block;
-	border: 4px solid #9AC3BE;
+  border: none;
+	border-bottom: 2px solid $c-blue--light;
+  background-color: transparent;
+  font-family: $f-serif;
+  @include transition(all .25s ease-in-out);
+
 	@include bp(sml) {
 		padding: 20px;
-		border-width: 6px;
+		border-bottom-width: 2px;
 		@include font-size(40);
 	}
 	@include bp(med) {
-		border-width: 8px;
+		border-bottom-width: 2px;
 		width: 100%;
 		@include font-size(60);
 	}
+  &:focus {
+    outline: none;
+    //background-color: $c-gray--light;
+    border-bottom-width: 4px;
+    border-bottom-color: $c-blue--dark
+  }
+  &.error{
+    color: $c-red;
+    border-bottom-color: $c-red;
+  }
 }
 p.definition{
-	font-family: "Helvetica Neue", sans-serif;
+	font-family: $f-sans;
 	font-style: italic;
-    margin: 50px 20px;
-   	@include line-height(22);
+  margin: 50px 20px;
+ 	@include line-height(22);
+  @include font-size(20);
 }
 .word{
+  font-family: $f-serif;
 	font-style: normal;
 	font-weight: bold;
+  color: $c-red; 
 }
+
+
 // audio.audio{
 // 	width: 35px;
 // 	height: 35px;

@@ -17,13 +17,13 @@ gulp.task('styles', function() {
         .pipe(rename('style.min.css'))
         .pipe(minifycss())
         .pipe(gulp.dest(stylesDir))
-});
+});  
 
 gulp.task('watch', function() {
-  gulp.watch( stylesDir + '*.scss', ['styles']);
+  gulp.watch( stylesDir + '/*.scss', ['styles']);
 });
 
 
 gulp.task('default', function() {
-    gulp.start('styles', 'watch');
+    gulp.start('watch','styles');
 });

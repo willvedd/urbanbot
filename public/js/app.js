@@ -1,7 +1,3 @@
-
-
-
-
 //==========================//
 //========= Player =========//
 //==========================//
@@ -44,7 +40,23 @@ var AudioList = React.createClass({
       );
     }
     else{
-      return (<div><p>No Results beep boop</p></div>);
+      return (<div><p>No Audio</p></div>);
+    }
+  }
+});
+
+//==========================//
+//========= Content ========//
+//==========================//
+var MainContent = React.createClass({
+  render: function(){
+    if(this.props.results){
+      return (
+        <div><p className="definition"><span className="word">{this.props.word}:</span>{this.props.definition}</p><AudioList clips={this.props.audio}/></div>
+      );
+    }
+    else{
+      return (<div><p class="error">This word not found homie.</p></div>);
     }
   }
 });
@@ -53,38 +65,76 @@ var AudioList = React.createClass({
 //=========== App ==========//
 //==========================//
 var App = React.createClass({
-  getInitialState: function () {
-    return {
-      search: "",
-      word: "",
-      clips: [],
-      definition: "",
-    };
-  },
-  searchChanged: function(e){
-    var self = this;
-    self.setState(function(state) {
-      return {search: e.target.value};
-    });
-    clearTimeout(this.fetchTimer);
-    
-    self.fetchTimer = setTimeout(function(){
-      var source = 'http://localhost:8081/api?'+self.state.search;
-      $.get(source, function(data) {
-        var result = JSON.parse(data);
-        self.setState(function(state){
-          return {
-            word: result.title,
-            clips: result.audio,
-            definition: result.definition,
-          };
-        });
-      });
-    }, 250); 
-  },
   render: function () {
-    return (<div><input className="search" onChange={this.searchChanged} type="text" placeholder="UrbanBot" id="search"/><div><p className="definition"><span className="word">{this.state.word}:</span>{this.state.definition}</p><AudioList clips={this.state.clips}/></div></div>);
+    console.log("props",this.props.appData);
+    return (<div><input className={this.props.appData.results ? 'search' : 'error search'} type="text" placeholder="UrbanBot" id="search"/><div><MainContent audio={this.props.appData.audio} word={this.props.appData.title} definition={this.props.appData.definition} results={this.props.appData.results}/>
+      </div></div>);
   },
 });
 
-ReactDOM.render(<App />,document.getElementById('app-container'));
+var initialState = {
+  title: "",
+  audio: [],
+  definition: "",
+  results: null,
+};
+
+ReactDOM.render(<App appData={initialState}/>,document.getElementById('app-container'));
+
+
+//==========================//
+//======= RxJS stuff =======//
+//==========================//
+
+var requestUrl = 'http://localhost:8081/api?';
+
+var initRequestStream = Rx.Observable.just(requestUrl + readPath())
+    .flatMap(requestUrl =>
+      Rx.Observable.fromPromise(jQuery.getJSON(requestUrl + readPath()))
+    );
+
+var updateStream = Rx.Observable.fromEvent($('#search'), 'keyup change')
+    .pluck('target', 'value')
+    .filter(function (text) {
+      return text.length > 2;
+    })
+    .do(function(term){
+      setPath(term);
+      return term;
+    })
+    .flatMap(requestParam =>
+      Rx.Observable.fromPromise(jQuery.getJSON(requestUrl + requestParam))
+    )
+    .debounce(100);
+
+var dataStream = initRequestStream.merge(updateStream);
+
+dataStream.subscribe(response => {
+  ReactDOM.render(<App appData={response}/>,document.getElementById('app-container'));
+});
+
+//==========================//
+//=== History management ===//
+//==========================//
+function setPath(term){
+  var path = '#' + String(term).replace(/\s+/g, '-').toLowerCase();
+
+  if(history.pushState) {
+    history.pushState(null, null, path);
+  }
+  else {
+      location.hash = path;
+  }
+}
+
+function readPath() {
+  if(window.location.hash) {
+    console.log("hash set",window.location.hash);
+    return window.location.hash.replace(/-/g, ' ');;
+  } else {
+    console.log("hash not set");
+    return '';
+  }
+}
+
+
